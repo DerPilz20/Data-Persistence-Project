@@ -10,6 +10,8 @@ public class MenuManager : MonoBehaviour
     public static MenuManager Instance;
     private GameObject canvas;
     private TextMeshProUGUI score;
+    private TMP_InputField inputName;
+    private string playerName;
     
     void Awake()
     {
@@ -25,15 +27,22 @@ public class MenuManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         canvas = GameObject.Find("Canvas");
         score = canvas.transform.Find("Score").GetComponent<TextMeshProUGUI>();
+        inputName = canvas.transform.Find("InputFieldName").GetComponent<TMP_InputField>();
     }
 
     public void StartGame()
     {
+        playerName = inputName.text;
         SceneManager.LoadScene("main");
     }
 
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public string GetPlayerName()
+    {
+        return playerName;
     }
 }
