@@ -34,7 +34,7 @@ public class MenuManager : MonoBehaviour
         canvas = GameObject.Find("Canvas");
         bestScoreText = canvas.transform.Find("BestScore").GetComponent<TextMeshProUGUI>();
         inputName = canvas.transform.Find("InputFieldName").GetComponent<TMP_InputField>();
-
+        Debug.Log(Application.persistentDataPath);
         bestScoreText.text = $"Best Score : {bestPlayerName} : {bestScore}";
     }
 
