@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,9 +24,14 @@ public class MainManager : MonoBehaviour
     private static string bestPlayerName;
     private static int bestScore;
 
+    private string saveFilePath;
+
     private void Awake()
     {
         currentPlayerName = MenuManager.Instance.GetPlayerName();
+        saveFilePath = Path.Combine(Application.persistentDataPath, "highscore.json");
+
+        LoadHighScore();
         BestScoreText.text = $"Best Score : {bestPlayerName} : {bestScore}";
     }
 
@@ -84,9 +90,31 @@ public class MainManager : MonoBehaviour
         {
             bestPlayerName = currentPlayerName;
             bestScore = m_Points;
+            SaveHighScore();
         }
         BestScoreText.text = $"Best Score : {bestPlayerName} : {bestScore}";
         m_GameOver = true;
         GameOverText.SetActive(true);
+    }
+
+    private void SaveHighScore()
+    {
+        HighScoreData highScoreData = new HighScoreData();
+        highScoreData.playerName = bestPlayerName;
+        highScoreData.score = bestScore;
+
+        string json = JsonUtility.ToJson(highScoreData);
+        File.WriteAllText(saveFilePath, json);
+    }
+
+    private void LoadHighScore()
+    {
+        if (File.Exists(saveFilePath))
+        {
+            string json = File.ReadAllText(saveFilePath);
+            HighScoreData highScoreData = JsonUtility.FromJson<HighScoreData>(json);
+            bestPlayerName = highScoreData.playerName;
+            bestScore = highScoreData.score;
+        }
     }
 }
